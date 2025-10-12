@@ -1,22 +1,27 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import UsuarioAdaptado
+from .models import Cliente, Login_Usuario, Consoles, Controles, Outros
 
-@admin.register(UsuarioAdaptado)
-class UsuarioAdaptadoAdmin(UserAdmin):
-    model = UsuarioAdaptado
-    list_display = ['username', 'email', 'cpf', 'nome_cidade', 'is_staff', 'is_active']
-    list_filter = ['is_staff', 'is_active', 'groups']
-    search_fields = ['username', 'email', 'cpf', 'nome_mae']
-    
-    fieldsets = UserAdmin.fieldsets + (
-        ('Informações Adicionais', {
-            'fields': ('cpf', 'nome_cidade', 'nome_mae', 'endereco', 'nome_bairro')
-        }),
-    )
-    
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ('Informações Adicionais', {
-            'fields': ('cpf', 'nome_cidade', 'nome_mae', 'endereco', 'nome_bairro')
-        }),
-    )
+@admin.register(Cliente)
+class ClienteAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'telefone', 'endereco']
+    search_fields = ['nome', 'telefone']
+
+@admin.register(Login_Usuario)
+class LoginUsuarioAdmin(admin.ModelAdmin):
+    list_display = ['email', 'username', 'created_at']
+    search_fields = ['email', 'username__nome']
+
+@admin.register(Consoles)
+class ConsolesAdmin(admin.ModelAdmin):
+    list_display = ['nome_cliente', 'tipo_console', 'data_de_entrada', 'valor_orcamento']
+    list_filter = ['data_de_entrada', 'data_saida']
+
+@admin.register(Controles)
+class ControlesAdmin(admin.ModelAdmin):
+    list_display = ['nome_cliente', 'tipo_controle', 'data_de_entrada', 'valor_orcamento']
+    list_filter = ['data_de_entrada', 'data_saida']
+
+@admin.register(Outros)
+class OutrosAdmin(admin.ModelAdmin):
+    list_display = ['nome_cliente', 'tipo_outro', 'data_de_entrada', 'valor_orcamento']
+    list_filter = ['data_de_entrada', 'data_saida']

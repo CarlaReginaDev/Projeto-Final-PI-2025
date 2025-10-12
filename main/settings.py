@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'vaga',
     'usuarios',
 ]
 
@@ -126,7 +125,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # informando para o django o usuario utilizado.
-AUTH_USER_MODEL = 'usuarios.UsuarioAdaptado'
+AUTH_USER_MODEL = 'auth.User'
 
 # URLs de redirecionamento após login/logout
 LOGIN_URL = 'login'

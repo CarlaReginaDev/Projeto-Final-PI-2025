@@ -1,33 +1,17 @@
-"""
-URL configuration for main project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path
-from django.conf.urls.static import static
 from django.conf import settings
-from vaga import views
-from django.urls import include
+from django.conf.urls.static import static
+from django.urls import path, include
+from usuarios import views  # Import views directly
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.listar_vagas, name='listar_vagas'),
-    path('vaga/criar/', views.criar_vaga, name='criar_vaga'),
-    path('vaga/editar/<int:pk>/', views.editar_vaga, name='editar_vaga'),
-    path('vaga/deletar/<int:pk>/', views.deletar_vaga, name='deletar_vaga'),
-    path('usuarios/', include('usuarios.urls')),
+    path('cadastrar_usuario/', views.cadastrar_usuario, name='cadastrar_usuario'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('perfil/', views.perfil_view, name='perfil'),
+    path('', views.login_view, name='home'),
+    # path('usuarios/', include('usuarios.urls')),  # Remove or keep both
 ]
 
 if settings.DEBUG:

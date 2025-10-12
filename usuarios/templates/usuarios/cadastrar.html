@@ -36,59 +36,14 @@
             text-align: center;
         }
 
-        .cadastro-header i {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
         .cadastro-body {
             padding: 40px;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
         }
 
         .btn-cadastrar {
             background-color: var(--primary-green);
             border: none;
             padding: 12px;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .btn-cadastrar:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .link-login {
-            color: var(--primary-green);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .link-login:hover {
-            text-decoration: underline;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: var(--dark-gray);
-        }
-
-        .form-section {
-            background-color: var(--light-green);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .form-section h5 {
-            color: var(--dark-gray);
-            margin-bottom: 15px;
             font-weight: bold;
         }
 
@@ -102,7 +57,7 @@
     <div class="container">
         <div class="cadastro-container">
             <div class="cadastro-header">
-                <i class="bi bi-person-plus-fill"></i>
+                <i class="bi bi-person-plus-fill" style="font-size: 3rem;"></i>
                 <h2>Cadastro de Usuário</h2>
                 <p class="mb-0">Preencha os dados para criar sua conta</p>
             </div>
@@ -121,116 +76,73 @@
                     {% csrf_token %}
 
                     <!-- Dados de Acesso -->
-                    <div class="form-section">
-                        <h5><i class="bi bi-key"></i> Dados de Acesso</h5>
+                    <div class="mb-4">
+                        <h5 class="text-success mb-3"><i class="bi bi-key"></i> Dados de Acesso</h5>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.username.id_for_label }}" class="form-label required-field">
-                                    Usuário
-                                </label>
-                                {{ form.username }}
-                                {% if form.username.errors %}
-                                    <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+                                <label class="form-label required-field">Usuário</label>
+                                {{ user_form.username }}
+                                {% if user_form.username.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.username.errors }}</div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.email.id_for_label }}" class="form-label required-field">
-                                    E-mail
-                                </label>
-                                {{ form.email }}
-                                {% if form.email.errors %}
-                                    <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                                <label class="form-label required-field">E-mail</label>
+                                {{ user_form.email }}
+                                {% if user_form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.email.errors }}</div>
                                 {% endif %}
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.password1.id_for_label }}" class="form-label required-field">
-                                    Senha
-                                </label>
-                                {{ form.password1 }}
-                                {% if form.password1.errors %}
-                                    <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
+                                <label class="form-label required-field">Senha</label>
+                                {{ user_form.password1 }}
+                                {% if user_form.password1.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.password1.errors }}</div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.password2.id_for_label }}" class="form-label required-field">
-                                    Confirmar Senha
-                                </label>
-                                {{ form.password2 }}
-                                {% if form.password2.errors %}
-                                    <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
+                                <label class="form-label required-field">Confirmar Senha</label>
+                                {{ user_form.password2 }}
+                                {% if user_form.password2.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.password2.errors }}</div>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
 
                     <!-- Dados Pessoais -->
-                    <div class="form-section">
-                        <h5><i class="bi bi-person"></i> Dados Pessoais</h5>
+                    <div class="mb-4">
+                        <h5 class="text-success mb-3"><i class="bi bi-person"></i> Dados Pessoais</h5>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label class="form-label required-field">Nome Completo</label>
+                                {{ cliente_form.nome }}
+                                {% if cliente_form.nome.errors %}
+                                    <div class="text-danger small mt-1">{{ cliente_form.nome.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.cpf.id_for_label }}" class="form-label required-field">
-                                    CPF
-                                </label>
-                                {{ form.cpf }}
-                                {% if form.cpf.errors %}
-                                    <div class="text-danger small mt-1">{{ form.cpf.errors }}</div>
+                                <label class="form-label required-field">Telefone</label>
+                                {{ cliente_form.telefone }}
+                                {% if cliente_form.telefone.errors %}
+                                    <div class="text-danger small mt-1">{{ cliente_form.telefone.errors }}</div>
                                 {% endif %}
-                                <small class="text-muted">Apenas números</small>
+                                <small class="text-muted">Ex: (84) 99999-9999</small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.nome_mae.id_for_label }}" class="form-label">
-                                    Nome da Mãe
-                                </label>
-                                {{ form.nome_mae }}
-                                {% if form.nome_mae.errors %}
-                                    <div class="text-danger small mt-1">{{ form.nome_mae.errors }}</div>
+                                <label class="form-label required-field">Endereço</label>
+                                {{ cliente_form.endereco }}
+                                {% if cliente_form.endereco.errors %}
+                                    <div class="text-danger small mt-1">{{ cliente_form.endereco.errors }}</div>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
-
-                    <!-- Endereço -->
-                    <div class="form-section">
-                        <h5><i class="bi bi-geo-alt"></i> Endereço</h5>
-                        <div class="mb-3">
-                            <label for="{{ form.endereco.id_for_label }}" class="form-label">
-                                Endereço Completo
-                            </label>
-                            {{ form.endereco }}
-                            {% if form.endereco.errors %}
-                                <div class="text-danger small mt-1">{{ form.endereco.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.nome_bairro.id_for_label }}" class="form-label">
-                                    Bairro
-                                </label>
-                                {{ form.nome_bairro }}
-                                {% if form.nome_bairro.errors %}
-                                    <div class="text-danger small mt-1">{{ form.nome_bairro.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.nome_cidade.id_for_label }}" class="form-label">
-                                    Cidade
-                                </label>
-                                {{ form.nome_cidade }}
-                                {% if form.nome_cidade.errors %}
-                                    <div class="text-danger small mt-1">{{ form.nome_cidade.errors }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {{ form.non_field_errors }}
-                        </div>
-                    {% endif %}
 
                     <div class="d-grid mb-3">
                         <button type="submit" class="btn btn-success btn-cadastrar">
@@ -238,9 +150,9 @@
                         </button>
                     </div>
 
-                    <div class="text-center">
+                   <div class="text-center">
                         <p class="mb-0">Já tem uma conta? 
-                            <a href="{% url 'login' %}" class="link-login">
+                            <a href="{% url 'home' %}" class="text-success text-decoration-none">
                                 Faça login aqui
                             </a>
                         </p>
