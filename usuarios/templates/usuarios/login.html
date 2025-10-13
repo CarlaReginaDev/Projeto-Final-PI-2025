@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - WorkApp</title>
+    <title>Login - Tech Control</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         :root {
-            --primary-green: #4CAF50;
+            --primary-green: #2997d6;
             --light-green: #E8F5E9;
-            --dark-gray: #2C3E50;
+            --dark-gray: #05386c;
         }
 
         body {
@@ -59,7 +59,7 @@
 
         .form-control:focus {
             border-color: var(--primary-green);
-            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+            box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25);
         }
 
         .btn-login {
@@ -71,7 +71,7 @@
         }
 
         .btn-login:hover {
-            background-color: #45a049;
+            background-color: #2997d6;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
@@ -96,13 +96,13 @@
     <div class="login-container">
         <div class="row g-0">
             <div class="col-md-5 login-left">
-                <i class="bi bi-briefcase-fill"></i>
-                <h2>WorkApp</h2>
-                <p>Sistema de Gestão de Vagas de Emprego</p>
+                <i class="bi bi-clipboard-data-fill"></i>
+                <h2>Tech Control</h2>
+                <p>Controle de Orçamento de Serviços</p>
             </div>
             <div class="col-md-7 login-right">
                 <h3 class="mb-4">
-                    <i class="bi bi-box-arrow-in-right text-success"></i> Entrar
+                    <i class="bi bi-box-arrow-in-right text-success"></i> Login do Usuário
                 </h3>
 
                 {% if messages %}
