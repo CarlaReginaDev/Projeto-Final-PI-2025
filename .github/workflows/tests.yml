@@ -28,7 +28,7 @@ jobs:
 
       - name: Migrações
         run: |
-          python WorkApp/manage.py migrate
+          python manage.py migrate
 
       - name: Executa Testes
         run: |
