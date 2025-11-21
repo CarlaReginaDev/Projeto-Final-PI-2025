@@ -28,7 +28,8 @@ jobs:
 
       - name: Migrações
         run: |
-          python ./WorkApp/manage.py migrate
+          cd WorkApp/
+          python manage.py migrate
 
       - name: Executa Testes
         run: |
