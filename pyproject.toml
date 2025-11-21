@@ -17,7 +17,6 @@ Repository = "https://github.com/CarlaReginaDev/Projeto-Final-PI-2025"
 DJANGO_SETTINGS_MODULE = "workapp.main.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 addopts = ["--tb=short", "--strict-markers", "--disable-warnings"]
-pythonpath = [".", "workapp"]
 markers = [
     "slow: slow running tests",
     "integration: integration tests",
