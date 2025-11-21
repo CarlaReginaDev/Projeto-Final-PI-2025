@@ -1,7 +1,7 @@
 import pytest
 from django.test import TestCase, Client
 from django.urls import reverse
-from WorkApp.usuarios.models import Consoles
+from workapp.usuarios.models import Consoles
 
 class ViewTests(TestCase):
     def setUp(self):

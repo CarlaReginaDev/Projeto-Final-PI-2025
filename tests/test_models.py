@@ -1,6 +1,6 @@
 import pytest
 from django.test import TestCase
-from WorkApp.usuarios.models import Consoles
+from workapp.usuarios.models import Consoles
 
 class ConsolesTest(TestCase):
     def test_model_creation(self):
