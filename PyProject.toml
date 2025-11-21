@@ -1,0 +1,18 @@
+[build-system]
+requires = [ "setuptools>=45", "wheel", "asgiref==3.9.2", "Django==5.2.6", "dotenv==0.9.9", "pillow==11.3.0", "psycopg2-binary==2.9.11", "python-dotenv==1.1.1", "sqlparse==0.5.3", "tzdata==2025.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PFPI-demo"
+version = "0.1.0"
+description = "demonstração do projeto final"
+readme = "README.md"
+
+[[project.authors]]
+name = "Kleber Ferreira"
+email = "kleberf778147@gmail.com"
+
+[project.urls]
+Homepage = "https://github.com/CarlaReginaDev/Projeto-Final-PI-2025"
+Repository = "https://github.com/CarlaReginaDev/Projeto-Final-PI-2025"
+"Bug Tracker" = "https://github.com/CarlaReginaDev/Projeto-Final-PI-2025/issues"
