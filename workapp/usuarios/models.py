@@ -6,6 +6,10 @@ class Cliente(models.Model):
     nome = models.CharField(max_length=150, verbose_name="Nome Completo")
     telefone = models.CharField(max_length=15, verbose_name="Telefone", null=False, primary_key=True)
     endereco = models.CharField(max_length=255, verbose_name="Endereço", null=False)
+
+    
+    class Meta:
+        app_label = 'usuarios'
     
     def __str__(self):
         return self.nome
@@ -14,6 +18,9 @@ class Login_Usuario(models.Model):
     username = models.OneToOneField(Cliente, on_delete=models.CASCADE, verbose_name="Nome de Usuário")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Data de Criação")
     email = models.EmailField(unique=True, verbose_name="Email", primary_key=True)
+    
+    class Meta:
+        app_label = 'usuarios'
     
     def __str__(self):
         return self.email
@@ -26,6 +33,9 @@ class Consoles(models.Model):
     valor_orcamento = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor do Orçamento")
     data_saida = models.DateField(null=True, blank=True, verbose_name="Data de Saída")
     
+    class Meta:
+        app_label = 'usuarios'
+    
     def __str__(self):
         return f"{self.nome_cliente} - {self.tipo_console}"
 
@@ -37,6 +47,9 @@ class Controles(models.Model):
     valor_orcamento = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor do Orçamento")
     data_saida = models.DateField(null=True, blank=True, verbose_name="Data de Saída")
     
+    class Meta:
+        app_label = 'usuarios'
+    
     def __str__(self):
         return f"{self.nome_cliente} - {self.tipo_controle}"
 
@@ -47,6 +60,9 @@ class Outros(models.Model):
     detalhes_orcamento = models.ForeignKey(Login_Usuario, verbose_name="Detalhes do Orçamento", on_delete=models.CASCADE)
     valor_orcamento = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor do Orçamento")
     data_saida = models.DateField(null=True, blank=True, verbose_name="Data de Saída")
+    
+    class Meta:
+        app_label = 'usuarios'
     
     def __str__(self):
         return f"{self.nome_cliente} - {self.tipo_outro}"
