@@ -47,6 +47,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
+      - name: Configurar ambiente
+        run: |
+          echo "DJANGO_SETTINGS_MODULE=main.settings" >> $GITHUB_ENV
+          echo "PYTHONPATH=workapp" >> $GITHUB_ENV
+
       - name: Wait for PostgreSQL to be ready
         run: |
           until pg_isready -h localhost -p 5432 -U postgres; do
@@ -61,7 +66,6 @@ jobs:
       - name: Configurar variáveis de ambiente globais
         run: |
           echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> $GITHUB_ENV
-          echo "DJANGO_SETTINGS_MODULE=workapp.main.settings" >> $GITHUB_ENV
           echo "DB_ENGINE=django.db.backends.postgresql" >> $GITHUB_ENV
           echo "DB_NAME=test_db" >> $GITHUB_ENV
           echo "DB_USER=postgres" >> $GITHUB_ENV
