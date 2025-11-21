@@ -61,7 +61,7 @@ jobs:
       - name: Configurar variáveis de ambiente globais
         run: |
           echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> $GITHUB_ENV
-          echo "DJANGO_SETTINGS_MODULE=workapp.settings" >> $GITHUB_ENV
+          echo "DJANGO_SETTINGS_MODULE=workapp.main.settings" >> $GITHUB_ENV
           echo "DB_ENGINE=django.db.backends.postgresql" >> $GITHUB_ENV
           echo "DB_NAME=test_db" >> $GITHUB_ENV
           echo "DB_USER=postgres" >> $GITHUB_ENV
