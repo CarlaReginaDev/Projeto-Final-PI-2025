@@ -28,9 +28,8 @@ jobs:
 
       - name: Migrações
         run: |
-          cd workapp
-          python manage.py migrate
+          python workapp/manage.py migrate
 
       - name: Executa Testes
         run: |
-          pytest tests/ --cov=usuarios --cov-report=xml
+          pytest tests/ --cov=workapp/usuarios --cov-report=xml
