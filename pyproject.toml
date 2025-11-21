@@ -14,7 +14,7 @@ Repository = "https://github.com/CarlaReginaDev/Projeto-Final-PI-2025"
 "Bug Tracker" = "https://github.com/CarlaReginaDev/Projeto-Final-PI-2025/issues"
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "workapp.settings"
+DJANGO_SETTINGS_MODULE = "workapp.main.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 addopts = ["--tb=short", "--strict-markers", "--disable-warnings"]
 pythonpath = [".", "workapp"]
