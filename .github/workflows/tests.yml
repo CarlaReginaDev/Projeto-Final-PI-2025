@@ -28,7 +28,6 @@ jobs:
 
       - name: Migrações
         run: |
-          ls -l WorkApp
           cd WorkApp
           python manage.py migrate
 
