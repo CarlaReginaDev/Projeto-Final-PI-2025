@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - WorkApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-green: #4CAF50;
+            --light-green: #E8F5E9;
+            --dark-gray: #2C3E50;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-gray) 100%);
+            min-height: 100vh;
+            padding: 40px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .cadastro-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cadastro-header {
+            background: var(--primary-green);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .cadastro-body {
+            padding: 40px;
+        }
+
+        .btn-cadastrar {
+            background-color: var(--primary-green);
+            border: none;
+            padding: 12px;
+            font-weight: bold;
+        }
+
+        .required-field::after {
+            content: " *";
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cadastro-container">
+            <div class="cadastro-header">
+                <i class="bi bi-person-plus-fill" style="font-size: 3rem;"></i>
+                <h2>Cadastro de Usuário</h2>
+                <p class="mb-0">Preencha os dados para criar sua conta</p>
+            </div>
+
+            <div class="cadastro-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Dados de Acesso -->
+                    <div class="mb-4">
+                        <h5 class="text-success mb-3"><i class="bi bi-key"></i> Dados de Acesso</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required-field">Usuário</label>
+                                {{ user_form.username }}
+                                {% if user_form.username.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required-field">E-mail</label>
+                                {{ user_form.email }}
+                                {% if user_form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required-field">Senha</label>
+                                {{ user_form.password1 }}
+                                {% if user_form.password1.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.password1.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required-field">Confirmar Senha</label>
+                                {{ user_form.password2 }}
+                                {% if user_form.password2.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.password2.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dados Pessoais -->
+                    <div class="mb-4">
+                        <h5 class="text-success mb-3"><i class="bi bi-person"></i> Dados Pessoais</h5>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label class="form-label required-field">Nome Completo</label>
+                                {{ cliente_form.nome }}
+                                {% if cliente_form.nome.errors %}
+                                    <div class="text-danger small mt-1">{{ cliente_form.nome.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required-field">Telefone</label>
+                                {{ cliente_form.telefone }}
+                                {% if cliente_form.telefone.errors %}
+                                    <div class="text-danger small mt-1">{{ cliente_form.telefone.errors }}</div>
+                                {% endif %}
+                                <small class="text-muted">Ex: (84) 99999-9999</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required-field">Endereço</label>
+                                {{ cliente_form.endereco }}
+                                {% if cliente_form.endereco.errors %}
+                                    <div class="text-danger small mt-1">{{ cliente_form.endereco.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-success btn-cadastrar">
+                            <i class="bi bi-check-circle"></i> Cadastrar
+                        </button>
+                    </div>
+
+                   <div class="text-center">
+                        <p class="mb-0">Já tem uma conta? 
+                            <a href="{% url 'home' %}" class="text-success text-decoration-none">
+                                Faça login aqui
+                            </a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
