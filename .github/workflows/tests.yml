@@ -15,7 +15,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:13
+        image: postgres:15
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -42,16 +42,34 @@ jobs:
           python -m pip install --upgrade pip
           pip install .[test]
 
-      - name: Setup environment variables for PostgreSQL
+      - name: Install PostgreSQL client and dependencies
         run: |
-          echo "DATABASE_URL=postgres://postgres:postgres@localhost:5432" >> $GITHUB_ENV
-          echo "DB_HOST=localhost" >> $GITHUB_ENV
-          echo "DB_PORT=5432" >> $GITHUB_ENV
-          echo "DB_NAME=postgres" >> $GITHUB_ENV
-          echo "DB_USER=postgres" >> $GITHUB_ENV
-          echo "DB_PASSWORD=pgAdmin" >> $GITHUB_ENV
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+          python -m pip install --upgrade pip
+          pip install -r workapp/requirements.txt
 
       - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for PostgreSQL to start..."
+            sleep 2
+          done
+
+      - name: Teste de conexão do PostgreSQL
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -c "SELECT version();"
+
+      - name: Setup para as variaveis de ambiente do banco de dados
+        run: |
+          echo "DB_ENGINE=django.db.backends.postgresql" >> $GITHUB_ENV
+          echo "DB_NAME=test_db" >> $GITHUB_ENV
+          echo "DB_USER=postgres" >> $GITHUB_ENV
+          echo "DB_PASSWORD=postgres" >> $GITHUB_ENV
+          echo "DB_HOST=localhost" >> $GITHUB_ENV
+          echo "DB_PORT=5432" >> $GITHUB_ENV
+
+      - name: aguarda o banco de dados
         run: |
           until pg_isready -h localhost -p 5432; do
             echo "Waiting for PostgreSQL..."
@@ -62,7 +80,23 @@ jobs:
       - name: Migrações
         run: |
           python workapp/manage.py migrate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+          DB_ENGINE: django.db.backends.postgresql
+          DB_NAME: test_db
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_PORT: 5432
 
       - name: Executa Testes
         run: |
           pytest tests/ --cov=workapp/usuarios --cov-report=xml
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+          DB_ENGINE: django.db.backends.postgresql
+          DB_NAME: test_db
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_PORT: 5432
