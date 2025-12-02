@@ -10,9 +10,13 @@ done
 
 echo "PostgreSQL iniciado!"
 
+# CORREÇÃO CRÍTICA: Adiciona o diretório /app (raiz do volume) ao PYTHONPATH.
+# Isso permite que o Python encontre o módulo 'workapp' aninhado.
+export PYTHONPATH=$PYTHONPATH:/app
+
 # Execute as migrações do banco de dados
 echo "Executando migrações..."
-python WorkApp/manage.py migrate
+python workapp/manage.py migrate
 
 # Inicie o comando principal (o CMD do Dockerfile)
 exec "$@"

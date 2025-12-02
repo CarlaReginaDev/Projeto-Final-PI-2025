@@ -27,7 +27,11 @@ SECRET_KEY = 'django-insecure-vo5$f!s#i0tc$!&z#nep2q8$3pjyb79b+_@f)2r=$k2j96hyjt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web']
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8080',
+]
 
 
 # Application definition
@@ -39,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'workapp.usuarios',
+    'usuarios',
 ]
 
 MIDDLEWARE = [
@@ -78,11 +82,11 @@ WSGI_APPLICATION = 'main.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'), 
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'NAME': os.environ.get('DB_NAME', 'postgres'),      # Deve ler DB_NAME
+        'USER': os.environ.get('DB_USER', 'postgres'),      # Deve ler DB_USER
+        'PASSWORD': os.environ.get('DB_PASS', 'PgAdmin'),    # **CRÍTICO: Deve ler DB_PASS**
+        'HOST': os.environ.get('DB_HOST', 'localhost'),      # Deve ler DB_HOST ('db' no compose)
+        'PORT': os.environ.get('DB_PORT', '5432'),          # Deve ler DB_PORT
     }
 }
 

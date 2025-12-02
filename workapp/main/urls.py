@@ -11,6 +11,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('perfil/', views.perfil_view, name='perfil'),
     path('', views.login_view, name='home'),
+    path('adicionar_pedido/', views.adicionar_pedido, name='adicionar_pedido'),
     # path('usuarios/', include('usuarios.urls')),  # Remove or keep both
 ]
 

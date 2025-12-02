@@ -23,10 +23,10 @@ RUN chmod +x /app/entrypoint.sh
 # Copie o resto do código do projeto para o diretório de trabalho
 COPY . .
 
-RUN python WorkApp/manage.py makemigrations
-RUN python WorkApp/manage.py migrate
-
 # O entrypoint será executado primeiro
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-CMD ["python", "WorkApp/manage.py", "runserver", "0.0.0.0:8000"]
+RUN python workapp/manage.py makemigrations
+RUN python workapp/manage.py migrate
+
+CMD ["python", "workapp/manage.py", "runserver", "0.0.0.0:8000"]

@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Cliente, Consoles
+from .models import Cliente, Pedidos
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -45,10 +45,12 @@ class PerfilForm(forms.ModelForm):
             'endereco': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-class ConsolesForm(forms.ModelForm):
+class PedidosForm(forms.ModelForm):
     class Meta:
-        model = Consoles
-        fields = ['nome_cliente', 'tipo_console', 'data_de_entrada', 'detalhes_orcamento', 'valor_orcamento', 'data_saida']
+        model = Pedidos
+        fields = ['tipo', 'detalhes_orcamento']
         widgets = {
-            'tipo_console': forms.TextInput(attrs={'class': 'form-control'})
+            # 'nome_cliente': forms.TextInput(attrs={'class': 'autoform-control'}), # <-- REMOVER
+            'tipo': forms.Select(attrs={'class': 'form-control'}), # Usar Select para TiposPedidos
+            'detalhes_orcamento': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         }

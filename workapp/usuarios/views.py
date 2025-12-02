@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import ClienteRegistrationForm, UserRegistrationForm, LoginForm, PerfilForm, ConsolesForm
+from .forms import ClienteRegistrationForm, UserRegistrationForm, LoginForm, PerfilForm, PedidosForm
 from django.contrib.auth.models import User, Group
 from .models import Cliente
 
@@ -82,5 +82,22 @@ def perfil_view(request):
     return render(request, 'usuarios/perfil.html', {'form': form})
 
 @login_required
-def adicionar_pedido():
-    return redirect('usuarios/adicionar_pedido.html')
+def adicionar_pedido(request):
+    try:
+        cliente = Cliente.objects.get(user=request.user)
+    except Cliente.DoesNotExist:
+        messages.error(request, 'Erro: Dados do cliente não encontrados.')
+        return redirect('perfil')
+        
+    if request.method == 'POST':
+        form = PedidosForm(request.POST) # Use PedidosForm, não ConsolesForm (como no snippet anterior)
+        if form.is_valid():
+            pedido = form.save(commit=False)
+            pedido.cliente = cliente  # 🌟 MUDANÇA CRÍTICA: Liga o pedido ao cliente
+            pedido.save()
+            messages.success(request, 'Pedido de conserto enviado com sucesso!')
+            return redirect('perfil')
+    else:
+        form = PedidosForm()
+    
+    return render(request, 'usuarios/adicionar_pedido.html', {'form': form})
