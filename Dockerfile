@@ -16,17 +16,13 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copie o script de entrypoint e dê permissão de execução
-COPY ./entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-
 # Copie o resto do código do projeto para o diretório de trabalho
 COPY . .
 
-# O entrypoint será executado primeiro
-ENTRYPOINT ["/app/entrypoint.sh"]
-
 RUN python workapp/manage.py makemigrations
-RUN python workapp/manage.py migrate
+COPY ./entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 CMD ["python", "workapp/manage.py", "runserver", "0.0.0.0:8000"]

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
-from usuarios import views  # Import views directly
+from usuarios import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,7 +12,10 @@ urlpatterns = [
     path('perfil/', views.perfil_view, name='perfil'),
     path('', views.login_view, name='home'),
     path('adicionar_pedido/', views.adicionar_pedido, name='adicionar_pedido'),
-    # path('usuarios/', include('usuarios.urls')),  # Remove or keep both
+    path('pedidos/gerenciar/', views.listar_pedidos, name='listar_pedidos'),
+    path('pedidos/gerenciar/<int:pedido_id>/', views.gerenciar_pedido, name='gerenciar_pedido'),
+    path('pedidos/atualizar-valor/<int:pedido_id>/', views.atualizar_valor_pedido, name='atualizar_valor_pedido'),
+    path('notificacoes/', views.notificacoes_view, name='notificacoes'),
 ]
 
 if settings.DEBUG:

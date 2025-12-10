@@ -48,9 +48,9 @@ class PerfilForm(forms.ModelForm):
 class PedidosForm(forms.ModelForm):
     class Meta:
         model = Pedidos
+        # Apenas campos que o cliente preenche, 'cliente' será preenchido na view
         fields = ['tipo', 'detalhes_orcamento']
         widgets = {
-            # 'nome_cliente': forms.TextInput(attrs={'class': 'autoform-control'}), # <-- REMOVER
-            'tipo': forms.Select(attrs={'class': 'form-control'}), # Usar Select para TiposPedidos
+            'tipo': forms.Select(attrs={'class': 'form-control'}), # Usar Select para choices
             'detalhes_orcamento': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         }

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Notificações</h2>
+    
+    {% if notificacoes %}
+        {% for notificacao in notificacoes %}
+        <div class="card mb-3 border-{% if notificacao.tipo == 'SUCESSO' %}success{% elif notificacao.tipo == 'ALERTA' %}warning{% elif notificacao.tipo == 'ERRO' %}danger{% else %}info{% endif %}">
+            <div class="card-body">
+                <p>{{ notificacao.mensagem }}</p>
+                <small class="text-muted">{{ notificacao.data_criacao|date:"d/m/Y H:i" }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">Nenhuma notificação.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerenciar Pedidos - WorkApp{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4">
+        <i class="bi bi-list-task text-danger"></i> Gerenciar Todos os Pedidos
+    </h2>
+    <p class="text-muted">Lista completa de requisições de conserto com paginação ({{ page_obj.paginator.count }} pedidos no total).</p>
+    
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Tipo</th>
+                            <th>Entrada</th>
+                            <th>Orçamento</th>
+                            <th>Detalhes</th>
+                            <th>Status/Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in page_obj %}
+                        <tr>
+                            <td>#{{ pedido.pk }}</td>
+                            <td>{{ pedido.cliente.nome }}</td>
+                            <td>{{ pedido.get_tipo_display }}</td>
+                            <td>{{ pedido.data_de_entrada|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if pedido.valor_orcamento %}
+                                    R$ {{ pedido.valor_orcamento|stringformat:".2f" }}
+                                {% else %}
+                                    *Pendente*
+                                {% endif %}
+                            </td>
+                            <td>{{ pedido.detalhes_orcamento|truncatechars:50 }}</td>
+                            <td>
+                                <!-- Status com badge colorido -->
+                                <span class="badge 
+                                    {% if pedido.status == 'PEN' %}bg-warning text-dark
+                                    {% elif pedido.status == 'ACE' %}bg-success
+                                    {% elif pedido.status == 'REC' %}bg-danger
+                                    {% elif pedido.status == 'AND' %}bg-info
+                                    {% elif pedido.status == 'CON' %}bg-primary
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ pedido.get_status_display }}
+                                </span>
+                                
+                                <!-- Botão de editar que leva para gerenciamento -->
+                                <a href="{% url 'gerenciar_pedido' pedido.id %}" class="btn btn-sm btn-outline-primary ms-2" title="Gerenciar Pedido">
+                                    <i class="bi bi-gear"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">Nenhuma requisição de conserto encontrada.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <nav aria-label="Navegação de Páginas">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Anterior</span>
+                </li>
+            {% endif %}
+
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Próxima</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

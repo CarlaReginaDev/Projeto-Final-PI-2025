@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Gerenciar Pedido #{{ pedido.id }}</h2>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>Detalhes do Pedido</h5>
+            <p><strong>Cliente:</strong> {{ pedido.cliente.nome }}</p>
+            <p><strong>Tipo:</strong> {{ pedido.get_tipo_display }}</p>
+            <p><strong>Status:</strong> 
+                <span class="badge 
+                    {% if pedido.status == 'PEN' %}bg-warning
+                    {% elif pedido.status == 'ACE' %}bg-success
+                    {% elif pedido.status == 'REC' %}bg-danger
+                    {% else %}bg-info{% endif %}">
+                    {{ pedido.get_status_display }}
+                </span>
+            </p>
+            <p><strong>Detalhes:</strong> {{ pedido.detalhes_orcamento }}</p>
+        </div>
+    </div>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Alterar Status:</label>
+            <select name="status" class="form-control">
+                {% for value, label in pedido.StatusPedido.choices %}
+                    <option value="{{ value }}" {% if pedido.status == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Valor do Orçamento (R$):</label>
+            <input type="number" step="0.01" name="valor_orcamento" 
+                   value="{{ pedido.valor_orcamento|default:'' }}" class="form-control">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Mensagem para o Cliente:</label>
+            <textarea name="mensagem_admin" class="form-control" rows="3">{{ pedido.mensagem_admin|default:'' }}</textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Atualizar Pedido</button>
+        <a href="{% url 'listar_pedidos' %}" class="btn btn-secondary">Voltar</a>
+    </form>
+</div>
+{% endblock %}

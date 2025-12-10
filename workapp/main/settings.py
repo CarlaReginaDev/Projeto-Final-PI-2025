@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web']
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080',
+    'https://registrodepedidos.nadic.com.br',
 ]
 
 
@@ -85,7 +86,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME', 'postgres'),      # Deve ler DB_NAME
         'USER': os.environ.get('DB_USER', 'postgres'),      # Deve ler DB_USER
         'PASSWORD': os.environ.get('DB_PASS', 'PgAdmin'),    # **CRÍTICO: Deve ler DB_PASS**
-        'HOST': os.environ.get('DB_HOST', 'localhost'),      # Deve ler DB_HOST ('db' no compose)
+        'HOST': os.environ.get('DB_HOST', 'db'),      # Deve ler DB_HOST ('db' no compose)
         'PORT': os.environ.get('DB_PORT', '5432'),          # Deve ler DB_PORT
     }
 }
