@@ -299,8 +299,12 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <button type="button" class="btn" style="color: white; font-size: 20px; margin-left: 8px; margin-top: 15px;">Dashboard - Início</button>
-        <button type="button" class="btn" style="color: white; font-size: 20px; margin-left: 8px">Registros</button>
+        <a href="{% url 'usuarios:dashboard' %}"> Dashboard - Início</a>
+        <strong>Registros</strong>
+        <button>Consoles</button>
+        <button>Controles</button>
+        <button>Outros</button>
+
             {% if request.user.is_gerente %}
                 <a class="nav-link" href="#">
                     <i class="bi bi-bar-chart"></i> Relatórios

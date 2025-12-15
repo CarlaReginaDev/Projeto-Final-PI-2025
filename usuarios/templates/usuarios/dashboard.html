@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <h1>Dashboard - Início</h1>
+
+    <div class="actions">
+        <a href="#" class="btn">Novo Cliente</a>
+        <a href="#" class="btn primary">Novo Serviço</a>
+    </div>
+</header>
+
+<section class="cards">
+    <div class="card">
+        <h3>Total de Serviços</h3>
+        <strong>{{ total_servicos }}</strong>
+        <small>{{ novos_semana }} novos esta semana</small>
+    </div>
+
+    <div class="card">
+        <h3>Receita Total</h3>
+        <strong>R$ {{ receita_total }}</strong>
+        <small>Média: R$ {{ receita_media }}</small>
+    </div>
+
+    <div class="card">
+        <h3>Taxa de Conclusão</h3>
+        <strong>{{ taxa_conclusao }}%</strong>
+        <progress value="{{ taxa_conclusao }}" max="100"></progress>
+    </div>
+
+    <div class="card">
+        <h3>Clientes Ativos</h3>
+        <strong>{{ clientes_ativos }}</strong>
+        <small>Total cadastrados</small>
+    </div>
+</section>
+
+<section class="grid">
+    <div class="box">
+        <h3>Status dos Serviços</h3>
+        <ul>
+            <li>Aguardando: {{ aguardando }}</li>
+            <li>Em andamento: {{ andamento }}</li>
+            <li>Concluído: {{ concluido }}</li>
+            <li>Entregue: {{ entregue }}</li>
+        </ul>
+    </div>
+
+    <div class="box">
+        <h3>Serviços por Categoria</h3>
+        <p>Nenhum serviço registrado ainda</p>
+    </div>
+</section>
+
+<section class="grid">
+    <div class="box">
+        <h3>Atividade Recente</h3>
+        <p>Nenhuma atividade recente</p>
+    </div>
+
+    <div class="box alert success">
+        <h3>Alertas</h3>
+        <p><strong>Tudo em dia!</strong><br>Não há alertas no momento.</p>
+    </div>
+</section>
+{% endblock %}
