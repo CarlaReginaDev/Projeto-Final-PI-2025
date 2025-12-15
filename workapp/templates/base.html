@@ -299,8 +299,13 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <button type="button" class="btn" style="color: white; font-size: 20px; margin-left: 8px; margin-top: 15px;">Dashboard - Início</button>
-        <button type="button" class="btn" style="color: white; font-size: 20px; margin-left: 8px">Registros</button>
+       
+        <a class="bi nav-link" href="{% url 'dashboard' %}"> Dashboard - Início</a>
+        <strong style="color: white; padding:30px;">Registros</strong>
+        <a class="bi nav-link">Consoles</a>
+        <a class="bi nav-link">Controles</a>
+        <a class="bi nav-link">Outros</a>
+        <nav class="mt-4">
             {% if request.user.is_gerente %}
                 <a class="nav-link" href="#">
                     <i class="bi bi-bar-chart"></i> Relatórios

@@ -16,6 +16,7 @@ urlpatterns = [
     path('pedidos/gerenciar/<int:pedido_id>/', views.gerenciar_pedido, name='gerenciar_pedido'),
     path('pedidos/atualizar-valor/<int:pedido_id>/', views.atualizar_valor_pedido, name='atualizar_valor_pedido'),
     path('notificacoes/', views.notificacoes_view, name='notificacoes'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]
 
 if settings.DEBUG:

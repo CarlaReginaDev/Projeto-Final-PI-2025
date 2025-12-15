@@ -182,3 +182,7 @@ def listar_pedidos(request):
     page_obj = paginator.get_page(page_number)
     
     return render(request, 'usuarios/listar_pedidos.html', {'page_obj': page_obj})
+
+@login_required
+def dashboard(request):
+    return render(request, 'usuarios/dashboard.html')

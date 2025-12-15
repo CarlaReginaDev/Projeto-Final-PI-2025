@@ -13,4 +13,5 @@ urlpatterns = [
     path('pedidos/atualizar-valor/<int:pedido_id>/', views.atualizar_valor_pedido, name='atualizar_valor_pedido'),
     path('notificacoes/', views.notificacoes_view, name='notificacoes'),
     path('', views.login_view, name='home'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]
