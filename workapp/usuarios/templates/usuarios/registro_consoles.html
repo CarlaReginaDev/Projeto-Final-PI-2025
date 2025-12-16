@@ -1,0 +1,122 @@
+{% extends 'servicos_base.html' %}
+
+{% block title %}Serviços - Consoles - Tech Control{% endblock %}
+
+{% block content %}
+<div class="services-header">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1>Serviços - Consoles</h1>
+            <div class="services-subtitle">
+                <span class="count-badge">2 serviços</span>
+            </div>
+        </div>
+        <button class="btn btn-novo-servico" data-bs-toggle="modal" data-bs-target="#novoServicoModal">
+            <i class="bi bi-plus-circle me-2"></i>Novo Serviço
+        </button>
+    </div>
+</div>
+
+<div class="services-table-container">
+    <table class="services-table">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Tipo</th>
+                <th>Orçamento</th>
+                <th>Entrada</th>
+                <th>Status</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+            <tbody>
+            <!-- Sem serviços ainda -->
+            <tr>
+                <td colspan="7" class="no-data">
+                    <i class="bi bi-controller"></i>
+                    <p>Nenhum serviço de console registrado ainda.</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Novo Serviço -->
+{% include 'modals/novo_servico_modal.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Formatação do valor monetário
+        const valorInput = document.getElementById('valor');
+        if (valorInput) {
+            valorInput.addEventListener('blur', function() {
+                let value = parseFloat(this.value);
+                if (!isNaN(value)) {
+                    this.value = value.toFixed(2);
+                }
+            });
+        }
+        
+        // Validação do formulário
+        const formNovoServico = document.getElementById('formNovoServico');
+        if (formNovoServico) {
+            formNovoServico.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validação básica
+                const cliente = document.getElementById('cliente');
+                const tipoServico = document.getElementById('tipoServico');
+                const descricao = document.getElementById('descricao');
+                const valor = document.getElementById('valor');
+                
+                if (!cliente.value) {
+                    alert('Por favor, selecione um cliente.');
+                    cliente.focus();
+                    return;
+                }
+                
+                if (!tipoServico.value.trim()) {
+                    alert('Por favor, informe o tipo de serviço.');
+                    tipoServico.focus();
+                    return;
+                }
+                
+                if (!descricao.value.trim()) {
+                    alert('Por favor, informe a descrição do serviço.');
+                    descricao.focus();
+                    return;
+                }
+                
+                if (!valor.value || parseFloat(valor.value) <= 0) {
+                    alert('Por favor, informe um valor válido.');
+                    valor.focus();
+                    return;
+                }
+                
+                // Aqui você pode enviar o formulário via AJAX ou submit normal
+                alert('Serviço salvo com sucesso!');
+                
+                // Fechar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('novoServicoModal'));
+                modal.hide();
+                
+                // Resetar formulário
+                formNovoServico.reset();
+                
+                // Em produção, aqui você faria uma requisição AJAX para salvar
+                // e depois atualizaria a tabela
+            });
+        }
+        
+        // Inicializar tooltips do Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+{% endblock %}

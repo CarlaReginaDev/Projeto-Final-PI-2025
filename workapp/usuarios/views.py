@@ -9,6 +9,7 @@ from django.contrib.auth.models import User, Group
 from .models import Cliente, Pedidos, Notificacao
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
+from datetime import date
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
@@ -186,3 +187,35 @@ def listar_pedidos(request):
 @login_required
 def dashboard(request):
     return render(request, 'usuarios/dashboard.html')
+
+@login_required
+def registro_consoles(request):
+    context = {
+        'page_title': 'Serviços - Consoles',
+        'hoje': date.today().isoformat(),
+    }
+    return render(request, 'usuarios/registro_consoles.html', context)
+
+@login_required
+def registro_controles(request):
+    context = {
+        'page_title': 'Serviços - Controles',
+        'hoje': date.today().isoformat(),
+    }
+    return render(request, 'usuarios/registro_controles.html', context)
+
+@login_required
+def registro_outros(request):
+    context = {
+        'page_title': 'Serviços - Outros',
+        'hoje': date.today().isoformat(),
+    }
+    return render(request, 'usuarios/registro_outros.html', context)
+
+def clientes(request):
+    context = {
+        'page_title': 'Clientes',
+        'hoje': date.today().isoformat(),
+        'total_clientes': 3,  # Substitua por dados reais do banco
+    }
+    return render(request, 'clientes.html', context)

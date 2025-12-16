@@ -1,0 +1,357 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Clientes - Tech Control{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Reutiliza os estilos dos serviços */
+    .services-header {
+        margin-bottom: 2rem;
+    }
+
+    .services-header h1 {
+        color: var(--dark-gray);
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .services-subtitle {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .count-badge {
+        background-color: var(--primary-green);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .btn-novo-cliente {
+        background-color: var(--primary-green);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-novo-cliente:hover {
+        background-color: #1a7abf;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .cliente-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cliente-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .cliente-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .cliente-nome {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--dark-gray);
+        margin: 0;
+    }
+
+    .cliente-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .cliente-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6c757d;
+    }
+
+    .info-item i {
+        color: var(--primary-green);
+        width: 20px;
+    }
+
+    .cliente-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eaeaea;
+    }
+
+    .btn-action {
+        padding: 0.25rem 0.75rem;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+    }
+
+    .btn-editar {
+        background-color: transparent;
+        color: var(--primary-green);
+        border: 1px solid var(--primary-green);
+    }
+
+    .btn-editar:hover {
+        background-color: var(--primary-green);
+        color: white;
+    }
+
+    .btn-servicos {
+        background-color: transparent;
+        color: #6c757d;
+        border: 1px solid #6c757d;
+    }
+
+    .btn-servicos:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .no-clientes {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6c757d;
+    }
+
+    .no-clientes i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+
+    /* Tabela alternativa */
+    .clientes-table-container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .clientes-table {
+        width: 100%;
+        margin: 0;
+    }
+
+    .clientes-table thead {
+        background-color: #f8f9fa;
+    }
+
+    .clientes-table th {
+        padding: 1rem;
+        font-weight: 600;
+        color: var(--dark-gray);
+        border-bottom: 2px solid #dee2e6;
+        text-align: left;
+    }
+
+    .clientes-table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .clientes-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .telefone-link {
+        color: var(--dark-gray);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .telefone-link:hover {
+        color: var(--primary-green);
+    }
+
+    @media (max-width: 768px) {
+        .cliente-info {
+            grid-template-columns: 1fr;
+        }
+        
+        .clientes-table-container {
+            overflow-x: auto;
+        }
+        
+        .clientes-table {
+            min-width: 800px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="services-header">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1>Clientes</h1>
+            <div class="services-subtitle">
+                <span class="count-badge">{{ total_clientes|default:"0" }} clientes</span>
+            </div>
+        </div>
+        <button class="btn btn-novo-cliente" data-bs-toggle="modal" data-bs-target="#novoClienteModal">
+            <i class="bi bi-person-plus me-2"></i>Novo Cliente
+        </button>
+    </div>
+</div>
+
+<!-- Alternativa: Tabela de clientes -->
+<div class="clientes-table-container mt-4">
+    <table class="clientes-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>Cidade/Estado</th>
+                <th>Data Cadastro</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Ana Silva</strong></td>
+                <td>
+                    <a href="tel:11987654321" class="telefone-link">
+                        <i class="bi bi-telephone me-1"></i>(11) 98765-4321
+                    </a>
+                </td>
+                <td>ana.silva@email.com</td>
+                <td>São Paulo, SP</td>
+                <td>12/06/2022</td>
+                <td>
+                    <button class="btn btn-detalhes">
+                        <i class="bi bi-eye me-1"></i>Ver
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Pedro Santos</strong></td>
+                <td>
+                    <a href="tel:11912345678" class="telefone-link">
+                        <i class="bi bi-telephone me-1"></i>(11) 91234-5678
+                    </a>
+                </td>
+                <td>pedro.santos@email.com</td>
+                <td>Rio de Janeiro, RJ</td>
+                <td>07/01/2022</td>
+                <td>
+                    <button class="btn btn-detalhes">
+                        <i class="bi bi-eye me-1"></i>Ver
+                    </button>
+                </td>
+            </tr>
+            <!-- Adicione mais clientes conforme necessário -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Novo Cliente -->
+{% include 'modals/novo_cliente_modal.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Máscara para telefone
+        const telefoneInput = document.getElementById('telefone');
+        if (telefoneInput) {
+            telefoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.substring(0, 11);
+                
+                if (value.length > 10) {
+                    // Formato: (00) 00000-0000
+                    value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+                } else if (value.length > 6) {
+                    // Formato: (00) 0000-0000
+                    value = value.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
+                } else if (value.length > 2) {
+                    value = value.replace(/^(\d{2})(\d{0,4})$/, '($1) $2');
+                } else if (value.length > 0) {
+                    value = value.replace(/^(\d*)$/, '($1');
+                }
+                
+                e.target.value = value;
+            });
+        }
+
+        // Validação do formulário de cliente
+        const formNovoCliente = document.getElementById('formNovoCliente');
+        if (formNovoCliente) {
+            formNovoCliente.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validação básica
+                const nomeCompleto = document.getElementById('nomeCompleto');
+                const telefone = document.getElementById('telefone');
+                
+                if (!nomeCompleto.value.trim()) {
+                    alert('Por favor, informe o nome completo do cliente.');
+                    nomeCompleto.focus();
+                    return;
+                }
+                
+                const telefoneNumeros = telefone.value.replace(/\D/g, '');
+                if (!telefoneNumeros || telefoneNumeros.length < 10) {
+                    alert('Por favor, informe um telefone válido com DDD.');
+                    telefone.focus();
+                    return;
+                }
+                
+                // Aqui você pode enviar o formulário via AJAX
+                alert('Cliente salvo com sucesso!');
+                
+                // Fechar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('novoClienteModal'));
+                modal.hide();
+                
+                // Resetar formulário
+                formNovoCliente.reset();
+                
+                // Em produção, aqui você faria uma requisição AJAX para salvar
+                // e depois atualizaria a lista de clientes
+            });
+        }
+
+        // Inicializar tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

@@ -12,6 +12,10 @@ urlpatterns = [
     path('pedidos/gerenciar/<int:pedido_id>/', views.gerenciar_pedido, name='gerenciar_pedido'),
     path('pedidos/atualizar-valor/<int:pedido_id>/', views.atualizar_valor_pedido, name='atualizar_valor_pedido'),
     path('notificacoes/', views.notificacoes_view, name='notificacoes'),
-    path('', views.login_view, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('', views.dashboard, name='home'),
+    path('registro/consoles/', views.registro_consoles, name='registro_consoles'),
+    path('registro/controles/', views.registro_controles, name='registro_controles'),
+    path('registro/outros/', views.registro_outros, name='registro_outros'),
+    path('clientes/', views.clientes, name='clientes'),
 ]

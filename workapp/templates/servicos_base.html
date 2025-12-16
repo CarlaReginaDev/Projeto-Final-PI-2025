@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    /* Estilos específicos para páginas de serviços */
+    .services-header {
+        margin-bottom: 2rem;
+    }
+
+    .services-header h1 {
+        color: var(--dark-gray);
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .services-subtitle {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Card de contagem */
+    .count-badge {
+        background-color: var(--primary-green);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    /* Botão Novo Serviço */
+    .btn-novo-servico {
+        background-color: var(--primary-green);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-novo-servico:hover {
+        background-color: #1a7abf;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Tabela de Serviços */
+    .services-table-container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .services-table {
+        width: 100%;
+        margin: 0;
+    }
+
+    .services-table thead {
+        background-color: #f8f9fa;
+    }
+
+    .services-table th {
+        padding: 1rem;
+        font-weight: 600;
+        color: var(--dark-gray);
+        border-bottom: 2px solid #dee2e6;
+        text-align: left;
+    }
+
+    .services-table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .services-table tbody tr {
+        transition: background-color 0.2s;
+    }
+
+    .services-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .services-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Badges de Status */
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .status-aguardando {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .status-andamento {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .status-concluido {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-entregue {
+        background-color: var(--light-green);
+        color: var(--primary-green);
+    }
+
+    .status-em-espera {
+        background-color: #e2e3e5;
+        color: #383d41;
+    }
+
+    /* Botão Detalhes */
+    .btn-detalhes {
+        background-color: transparent;
+        color: var(--primary-green);
+        border: 1px solid var(--primary-green);
+        padding: 0.25rem 0.75rem;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+    }
+
+    .btn-detalhes:hover {
+        background-color: var(--primary-green);
+        color: white;
+    }
+
+    /* Mensagem sem dados */
+    .no-data {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+
+    .no-data i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .services-table-container {
+            overflow-x: auto;
+        }
+        
+        .services-table {
+            min-width: 800px;
+        }
+    }
+</style>
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Formatação do valor monetário
+        const valorInput = document.getElementById('valor');
+        if (valorInput) {
+            valorInput.addEventListener('blur', function() {
+                let value = parseFloat(this.value);
+                if (!isNaN(value)) {
+                    this.value = value.toFixed(2);
+                }
+            });
+        }
+        
+        // Validação do formulário
+        const formNovoServico = document.getElementById('formNovoServico');
+        if (formNovoServico) {
+            formNovoServico.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validação básica
+                const cliente = document.getElementById('cliente');
+                const tipoServico = document.getElementById('tipoServico');
+                const descricao = document.getElementById('descricao');
+                const valor = document.getElementById('valor');
+                
+                if (!cliente.value) {
+                    alert('Por favor, selecione um cliente.');
+                    cliente.focus();
+                    return;
+                }
+                
+                if (!tipoServico.value.trim()) {
+                    alert('Por favor, informe o tipo de serviço.');
+                    tipoServico.focus();
+                    return;
+                }
+                
+                if (!descricao.value.trim()) {
+                    alert('Por favor, informe a descrição do serviço.');
+                    descricao.focus();
+                    return;
+                }
+                
+                if (!valor.value || parseFloat(valor.value) <= 0) {
+                    alert('Por favor, informe um valor válido.');
+                    valor.focus();
+                    return;
+                }
+                
+                // Aqui você pode enviar o formulário via AJAX ou submit normal
+                alert('Serviço salvo com sucesso!');
+                
+                // Fechar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('novoServicoModal'));
+                modal.hide();
+                
+                // Resetar formulário
+                formNovoServico.reset();
+                
+                // Em produção, aqui você faria uma requisição AJAX para salvar
+                // e depois atualizaria a tabela
+            });
+        }
+    });
+</script>
+{% endblock %}

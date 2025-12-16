@@ -1,0 +1,48 @@
+{% extends 'servicos_base.html' %}
+
+{% block title %}Serviços - Controles - Tech Control{% endblock %}
+
+{% block content %}
+<div class="services-header">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1>Serviços - Controles</h1>
+            <div class="services-subtitle">
+                <span class="count-badge">0 serviços</span>
+            </div>
+        </div>
+        <button class="btn btn-novo-servico" data-bs-toggle="modal" data-bs-target="#novoServicoModal">
+            <i class="bi bi-plus-circle me-2"></i>Novo Serviço
+        </button>
+    </div>
+</div>
+
+<div class="services-table-container">
+    <table class="services-table">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Tipo</th>
+                <th>Orçamento</th>
+                <th>Entrada</th>
+                <th>Status</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Sem serviços ainda -->
+            <tr>
+                <td colspan="7" class="no-data">
+                    <i class="bi bi-joystick"></i>
+                    <p>Nenhum serviço de controle registrado ainda.</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Novo Serviço -->
+
+
+{% endblock %}

@@ -17,6 +17,10 @@ urlpatterns = [
     path('pedidos/atualizar-valor/<int:pedido_id>/', views.atualizar_valor_pedido, name='atualizar_valor_pedido'),
     path('notificacoes/', views.notificacoes_view, name='notificacoes'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('registro/consoles/', views.registro_consoles, name='registro_consoles'),
+    path('registro/controles/', views.registro_controles, name='registro_controles'),
+    path('registro/outros/', views.registro_outros, name='registro_outros'),
+    path('clientes/', views.clientes, name='clientes'),
 ]
 
 if settings.DEBUG:

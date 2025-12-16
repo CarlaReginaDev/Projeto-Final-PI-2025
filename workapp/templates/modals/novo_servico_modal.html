@@ -1,0 +1,120 @@
+<!-- main/templates/modals/novo_servico_modal.html -->
+<div class="modal fade" id="novoServicoModal" tabindex="-1" aria-labelledby="novoServicoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="novoServicoModalLabel">Novo Serviço</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formNovoServico">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row g-3">
+                            <!-- Cliente -->
+                            <div class="col-md-6">
+                                <label for="cliente" class="form-label">
+                                    <strong>Cliente *</strong>
+                                </label>
+                                <select class="form-select" id="cliente" required>
+                                    <option value="" selected disabled>Selecione o cliente</option>
+                                    <option value="1">Ana</option>
+                                    <option value="2">Pedrinho</option>
+                                    <option value="3">Carlos</option>
+                                </select>
+                                <small class="text-muted">Selecione a categoria.</small>
+                            </div>
+
+                            <!-- Categoria -->
+                            <div class="col-md-6">
+                                <label for="categoria" class="form-label">
+                                    <strong>Categoria</strong>
+                                </label>
+                                <select class="form-select" id="categoria">
+                                    <option value="console" selected>Console</option>
+                                    <option value="controle">Controle</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+
+                            <!-- Tipo de Serviço -->
+                            <div class="col-12">
+                                <label for="tipoServico" class="form-label">
+                                    <strong>Tipo de Serviço *</strong>
+                                </label>
+                                <input type="text" class="form-control" id="tipoServico" 
+                                       placeholder="Ex: Limpeza, Reparo, Troca de peça" required>
+                            </div>
+
+                            <!-- Descrição -->
+                            <div class="col-12">
+                                <label for="descricao" class="form-label">
+                                    <strong>Descrição *</strong>
+                                </label>
+                                <textarea class="form-control" id="descricao" rows="3" 
+                                          placeholder="Descrição detalhada do problema/serviço" required></textarea>
+                            </div>
+
+                            <!-- Valor e Data -->
+                            <div class="col-md-6">
+                                <label for="valor" class="form-label">
+                                    <strong>Valor (R$) *</strong>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" class="form-control" id="valor" 
+                                           step="0.01" min="0" value="0.00" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="dataEntrada" class="form-label">
+                                    <strong>Data de Entrada *</strong>
+                                </label>
+                                <input type="date" class="form-control" id="dataEntrada" 
+                                       value="{{ hoje|default:'' }}" required>
+                            </div>
+
+                            <!-- Data Prevista e Status -->
+                            <div class="col-md-6">
+                                <label for="dataPrevista" class="form-label">
+                                    <strong>Data Prevista</strong>
+                                </label>
+                                <input type="date" class="form-control" id="dataPrevista">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="status" class="form-label">
+                                    <strong>Status</strong>
+                                </label>
+                                <select class="form-select" id="status">
+                                    <option value="aguardando" selected>Aguardando</option>
+                                    <option value="andamento">Em Andamento</option>
+                                    <option value="concluido">Concluído</option>
+                                    <option value="entregue">Entregue</option>
+                                    <option value="espera">Em espera</option>
+                                </select>
+                            </div>
+
+                            <!-- Observações -->
+                            <div class="col-12">
+                                <label for="observacoes" class="form-label">
+                                    <strong>Observações</strong>
+                                </label>
+                                <textarea class="form-control" id="observacoes" rows="3"
+                                          placeholder="Observações adicionais."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="background-color: var(--primary-green); border: none;">
+                        Salvar Serviço
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
