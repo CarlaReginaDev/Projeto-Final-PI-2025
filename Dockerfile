@@ -19,7 +19,7 @@ RUN pip install -r requirements.txt
 # Copie o resto do código do projeto para o diretório de trabalho
 COPY . .
 
-RUN python workapp/manage.py makemigrations
+# Copie o script de entrypoint e dê permissão de execução
 COPY ./entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 

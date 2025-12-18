@@ -4,13 +4,13 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator
-from .forms import ClienteRegistrationForm, UserRegistrationForm, LoginForm, PerfilForm, PedidosForm
+from .forms import ClienteRegistrationForm, UserRegistrationForm, LoginForm, PedidosForm, PerfilForm
 from django.contrib.auth.models import User, Group
 from .models import Cliente, Pedidos, Notificacao
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
-from datetime import date
-
+from datetime import date, timedelta
+from django.db.models import Count, Sum
 @login_required
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def gerenciar_pedido(request, pedido_id):
@@ -135,19 +135,36 @@ def logout_view(request):
 @login_required
 def perfil_view(request):
     try:
+        # Tente pegar o cliente, mas se falhar, não quebre
         cliente = Cliente.objects.get(user=request.user)
-    except Cliente.DoesNotExist:
+    except (Cliente.DoesNotExist, Exception):
+        # Se não existir ou se houver erro de banco, use None
         cliente = None
     
     if request.method == 'POST':
-        form = PerfilForm(request.POST, instance=cliente)
+        # Use apenas dados do User para o form
+        form = PerfilForm(request.POST)
         if form.is_valid():
-            form.save()
+            # Atualize o User, não o Cliente
+            user = request.user
+            user.first_name = form.cleaned_data.get('nome', '')
+            user.email = form.cleaned_data.get('email', '')
+            user.save()
             messages.success(request, 'Perfil atualizado com sucesso!')
             return redirect('perfil')
     else:
-        form = PerfilForm(instance=cliente)
+        # Dados iniciais do User
+        initial_data = {
+            'nome': request.user.first_name or request.user.username,
+            'email': request.user.email
+        }
+        form = PerfilForm(initial=initial_data)
     
+    context = {
+        'form': form,
+        'cliente': cliente,  # Pode ser None
+    }
+
     return render(request, 'usuarios/perfil.html', {'form': form})
 
 @login_required
@@ -190,32 +207,271 @@ def dashboard(request):
 
 @login_required
 def registro_consoles(request):
+    # Buscar clientes
+    clientes = Cliente.objects.all().order_by('nome')
+    
+    # Buscar serviços do tipo Console
+    servicos_consoles = Pedidos.objects.filter(tipo='CON').order_by('-data_de_entrada')
+    
+    # Contar totais
+    total_servicos = servicos_consoles.count()
+    servicos_aguardando = servicos_consoles.filter(status='PEN').count()
+    servicos_andamento = servicos_consoles.filter(status='AND').count()
+    servicos_concluidos = servicos_consoles.filter(status='CON').count()
+    
+    # Calcular valor total
+    valor_total = servicos_consoles.aggregate(
+        total=Sum('valor_orcamento')
+    )['total'] or 0
+    
     context = {
         'page_title': 'Serviços - Consoles',
         'hoje': date.today().isoformat(),
+        'clientes': clientes,
+        'servicos': servicos_consoles,
+        'total_servicos': total_servicos,
+        'servicos_aguardando': servicos_aguardando,
+        'servicos_andamento': servicos_andamento,
+        'servicos_concluidos': servicos_concluidos,
+        'valor_total': valor_total,
     }
     return render(request, 'usuarios/registro_consoles.html', context)
 
 @login_required
 def registro_controles(request):
+    # Buscar clientes
+    clientes = Cliente.objects.all().order_by('nome')
+    
+    # Buscar serviços do tipo Controle
+    servicos_controles = Pedidos.objects.filter(tipo='CTR').order_by('-data_de_entrada')
+    
+    # Contar totais
+    total_servicos = servicos_controles.count()
+    servicos_aguardando = servicos_controles.filter(status='PEN').count()
+    servicos_andamento = servicos_controles.filter(status='AND').count()
+    servicos_concluidos = servicos_controles.filter(status='CON').count()
+    
+    # Calcular valor total
+    valor_total = servicos_controles.aggregate(
+        total=Sum('valor_orcamento')
+    )['total'] or 0
+    
     context = {
         'page_title': 'Serviços - Controles',
         'hoje': date.today().isoformat(),
+        'clientes': clientes,
+        'servicos': servicos_controles,
+        'total_servicos': total_servicos,
+        'servicos_aguardando': servicos_aguardando,
+        'servicos_andamento': servicos_andamento,
+        'servicos_concluidos': servicos_concluidos,
+        'valor_total': valor_total,
     }
     return render(request, 'usuarios/registro_controles.html', context)
 
 @login_required
 def registro_outros(request):
+    # Buscar clientes
+    clientes = Cliente.objects.all().order_by('nome')
+    
+    # Buscar serviços do tipo Outros
+    servicos_outros = Pedidos.objects.filter(tipo='OUT').order_by('-data_de_entrada')
+    
+    # Contar totais
+    total_servicos = servicos_outros.count()
+    servicos_aguardando = servicos_outros.filter(status='PEN').count()
+    servicos_andamento = servicos_outros.filter(status='AND').count()
+    servicos_concluidos = servicos_outros.filter(status='CON').count()
+    
+    # Calcular valor total
+    valor_total = servicos_outros.aggregate(
+        total=Sum('valor_orcamento')
+    )['total'] or 0
+    
     context = {
         'page_title': 'Serviços - Outros',
         'hoje': date.today().isoformat(),
+        'clientes': clientes,
+        'servicos': servicos_outros,
+        'total_servicos': total_servicos,
+        'servicos_aguardando': servicos_aguardando,
+        'servicos_andamento': servicos_andamento,
+        'servicos_concluidos': servicos_concluidos,
+        'valor_total': valor_total,
     }
     return render(request, 'usuarios/registro_outros.html', context)
 
+@login_required
 def clientes(request):
+    # Buscar todos os clientes
+    todos_clientes = Cliente.objects.all().order_by('nome')
+    
+    # Contar total de clientes
+    total_clientes = todos_clientes.count()
+    
+    # Contar pedidos por cliente (opcional)
+    clientes_com_pedidos = []
+    for cliente in todos_clientes:
+        pedidos_count = Pedidos.objects.filter(cliente=cliente).count()
+        clientes_com_pedidos.append({
+            'cliente': cliente,
+            'total_pedidos': pedidos_count
+        })
+    
     context = {
         'page_title': 'Clientes',
         'hoje': date.today().isoformat(),
-        'total_clientes': 3,  # Substitua por dados reais do banco
+        'clientes': todos_clientes,
+        'total_clientes': total_clientes,
+        'clientes_com_pedidos': clientes_com_pedidos,
     }
     return render(request, 'clientes.html', context)
+
+@login_required
+def salvar_cliente(request):
+    if request.method == 'POST':
+        try:
+            nome = request.POST.get('nome')
+            telefone = request.POST.get('telefone')
+            cidade = request.POST.get('cidade', '')
+            estado = request.POST.get('estado', '')
+            data_cadastro = request.POST.get('data_cadastro')
+            descricao = request.POST.get('descricao', '')
+            
+            # Validação
+            if not nome or not telefone:
+                messages.error(request, 'Nome e telefone são obrigatórios.')
+                return redirect('clientes')
+            
+            # Verificar se telefone já existe
+            if Cliente.objects.filter(telefone=telefone).exists():
+                messages.error(request, 'Já existe um cliente com este telefone.')
+                return redirect('clientes')
+            
+            # Processar data (se não vier, usar data atual)
+            from datetime import datetime
+            if data_cadastro:
+                try:
+                    data_obj = datetime.strptime(data_cadastro, '%Y-%m-%d').date()
+                except:
+                    data_obj = datetime.now().date()
+            else:
+                data_obj = datetime.now().date()
+            
+            # Criar cliente SEM user primeiro (para testes)
+            cliente = Cliente.objects.create(
+                nome=nome,
+                telefone=telefone,
+                cidade=cidade,
+                estado=estado,
+                descricao=descricao,
+                data_cadastro=data_obj
+                # Não definimos user por enquanto
+            )
+            
+            messages.success(request, f'Cliente "{nome}" salvo com sucesso!')
+            return redirect('clientes')
+            
+        except Exception as e:
+            messages.error(request, f'Erro ao salvar cliente: {str(e)}')
+            return redirect('clientes')
+    
+    return redirect('clientes')
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def salvar_servico_console(request):
+    if request.method == 'POST':
+        try:
+            cliente_id = request.POST.get('cliente')
+            descricao = request.POST.get('descricao')
+            valor = request.POST.get('valor')
+            
+            # Validação
+            if not cliente_id or not descricao or not valor:
+                messages.error(request, 'Todos os campos são obrigatórios.')
+                return redirect('registro_consoles')
+            
+            cliente = Cliente.objects.get(telefone=cliente_id)
+            
+            # Criar pedido
+            Pedidos.objects.create(
+                cliente=cliente,
+                tipo='CON',
+                detalhes_orcamento=descricao,
+                valor_orcamento=valor,
+                status='PEN'
+            )
+            
+            messages.success(request, 'Serviço de console registrado com sucesso!')
+            return redirect('registro_consoles')
+            
+        except Exception as e:
+            messages.error(request, f'Erro: {str(e)}')
+            return redirect('registro_consoles')
+    
+    return redirect('registro_consoles')
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def salvar_servico_controle(request):
+    if request.method == 'POST':
+        try:
+            cliente_id = request.POST.get('cliente')
+            descricao = request.POST.get('descricao')
+            valor = request.POST.get('valor')
+            
+            if not cliente_id or not descricao or not valor:
+                messages.error(request, 'Todos os campos são obrigatórios.')
+                return redirect('registro_controles')
+            
+            cliente = Cliente.objects.get(telefone=cliente_id)
+            
+            Pedidos.objects.create(
+                cliente=cliente,
+                tipo='CTR',
+                detalhes_orcamento=descricao,
+                valor_orcamento=valor,
+                status='PEN'
+            )
+            
+            messages.success(request, 'Serviço de controle registrado com sucesso!')
+            return redirect('registro_controles')
+            
+        except Exception as e:
+            messages.error(request, f'Erro: {str(e)}')
+            return redirect('registro_controles')
+    
+    return redirect('registro_controles')
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def salvar_servico_outros(request):
+    if request.method == 'POST':
+        try:
+            cliente_id = request.POST.get('cliente')
+            descricao = request.POST.get('descricao')
+            valor = request.POST.get('valor')
+            
+            if not cliente_id or not descricao or not valor:
+                messages.error(request, 'Todos os campos são obrigatórios.')
+                return redirect('registro_outros')
+            
+            cliente = Cliente.objects.get(telefone=cliente_id)
+            
+            Pedidos.objects.create(
+                cliente=cliente,
+                tipo='OUT',
+                detalhes_orcamento=descricao,
+                valor_orcamento=valor,
+                status='PEN'
+            )
+            
+            messages.success(request, 'Serviço registrado com sucesso!')
+            return redirect('registro_outros')
+            
+        except Exception as e:
+            messages.error(request, f'Erro: {str(e)}')
+            return redirect('registro_outros')
+    
+    return redirect('registro_outros')

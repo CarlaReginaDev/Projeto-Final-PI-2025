@@ -6,7 +6,8 @@
                 <h5 class="modal-title" id="novoServicoModalLabel">Novo Serviço</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="formNovoServico">
+            <form id="formNovoServico" method="POST" action="{% url 'salvar_servico_controle' %}">
+                {% csrf_token %}
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row g-3">
@@ -15,11 +16,11 @@
                                 <label for="cliente" class="form-label">
                                     <strong>Cliente *</strong>
                                 </label>
-                                <select class="form-select" id="cliente" required>
+                                <select class="form-select" id="cliente" name="cliente" required>
                                     <option value="" selected disabled>Selecione o cliente</option>
-                                    <option value="1">Ana</option>
-                                    <option value="2">Pedrinho</option>
-                                    <option value="3">Carlos</option>
+                                    {% for cliente in clientes %}
+                                    <option value="{{ cliente.telefone }}">{{ cliente.nome }} - {{ cliente.telefone }}</option>
+                                    {% endfor %}
                                 </select>
                                 <small class="text-muted">Selecione a categoria.</small>
                             </div>

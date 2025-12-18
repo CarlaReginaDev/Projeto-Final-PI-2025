@@ -21,6 +21,10 @@ urlpatterns = [
     path('registro/controles/', views.registro_controles, name='registro_controles'),
     path('registro/outros/', views.registro_outros, name='registro_outros'),
     path('clientes/', views.clientes, name='clientes'),
+    path('salvar_cliente/', views.salvar_cliente, name='salvar_cliente'),
+    path('servico/console/salvar/', views.salvar_servico_console, name='salvar_servico_console'),
+    path('servico/controle/salvar/', views.salvar_servico_controle, name='salvar_servico_controle'),
+    path('servico/outros/salvar/', views.salvar_servico_outros, name='salvar_servico_outros'),
 ]
 
 if settings.DEBUG:

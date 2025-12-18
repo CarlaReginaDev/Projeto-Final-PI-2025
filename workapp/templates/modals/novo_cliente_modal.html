@@ -6,7 +6,8 @@
                 <h5 class="modal-title" id="novoClienteModalLabel">Novo Cliente</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="formNovoCliente">
+            <form id="formNovoCliente" method="post" action="{% url 'salvar_cliente' %}">  <!-- CORREÇÃO AQUI -->
+                {% csrf_token %}  <!-- ADICIONE ESTA LINHA -->
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row g-3">
@@ -16,6 +17,7 @@
                                     <strong>Nome Completo *</strong>
                                 </label>
                                 <input type="text" class="form-control" id="nomeCompleto" 
+                                       name="nome"  
                                        placeholder="Digite o nome completo do cliente" required>
                             </div>
 
@@ -29,21 +31,8 @@
                                         <i class="bi bi-telephone"></i>
                                     </span>
                                     <input type="tel" class="form-control" id="telefone" 
+                                           name="telefone"  
                                            placeholder="(00) 00000-0000" required>
-                                </div>
-                            </div>
-
-                            <!-- Email (opcional) -->
-                            <div class="col-md-6">
-                                <label for="email" class="form-label">
-                                    Email
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-envelope"></i>
-                                    </span>
-                                    <input type="email" class="form-control" id="email" 
-                                           placeholder="cliente@email.com">
                                 </div>
                             </div>
 
@@ -53,6 +42,7 @@
                                     Cidade
                                 </label>
                                 <input type="text" class="form-control" id="cidade" 
+                                       name="cidade"  
                                        placeholder="Nome da cidade">
                             </div>
 
@@ -99,6 +89,7 @@
                                     Data de Cadastro
                                 </label>
                                 <input type="date" class="form-control" id="dataCadastro" 
+                                       name="data_cadastro"
                                        value="{{ hoje|default:'' }}">
                             </div>
 
@@ -108,9 +99,8 @@
                                     Observações
                                 </label>
                                 <textarea class="form-control" id="observacoesCliente" rows="3"
+                                          name="descricao"
                                           placeholder="Observações adicionais sobre o cliente..."></textarea>
-                            </div>
-
                             </div>
                         </div>
                     </div>
@@ -120,6 +110,22 @@
                         Cancelar
                     </button>
                     <button type="submit" class="btn btn-primary" style="background-color: var(--primary-green); border: none;">
+                        Salvar Cliente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button href="{% url 'salvar_cliente' %}" type="submit" class="btn btn-primary" style="background-color: var(--primary-green); border: none;">
                         Salvar Cliente
                     </button>
                 </div>

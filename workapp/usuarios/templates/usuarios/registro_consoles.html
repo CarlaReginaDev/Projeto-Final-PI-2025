@@ -8,12 +8,35 @@
         <div>
             <h1>Serviços - Consoles</h1>
             <div class="services-subtitle">
-                <span class="count-badge">2 serviços</span>
+                <span class="count-badge">{{ total_servicos }} serviço{{ total_servicos|pluralize }}</span>
+                <span class="ms-2 text-muted">Total: R$ {{ valor_total|floatformat:2 }}</span>
             </div>
         </div>
         <button class="btn btn-novo-servico" data-bs-toggle="modal" data-bs-target="#novoServicoModal">
             <i class="bi bi-plus-circle me-2"></i>Novo Serviço
         </button>
+    </div>
+</div>
+
+<!-- Estatísticas rápidas -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card-small bg-warning bg-opacity-10">
+            <div class="stat-number">{{ servicos_aguardando }}</div>
+            <div class="stat-label">Aguardando</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card-small bg-info bg-opacity-10">
+            <div class="stat-number">{{ servicos_andamento }}</div>
+            <div class="stat-label">Em Andamento</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card-small bg-success bg-opacity-10">
+            <div class="stat-number">{{ servicos_concluidos }}</div>
+            <div class="stat-label">Concluídos</div>
+        </div>
     </div>
 </div>
 
@@ -30,21 +53,93 @@
                 <th>Ações</th>
             </tr>
         </thead>
-            <tbody>
-            <!-- Sem serviços ainda -->
-            <tr>
-                <td colspan="7" class="no-data">
-                    <i class="bi bi-controller"></i>
-                    <p>Nenhum serviço de console registrado ainda.</p>
-                </td>
-            </tr>
+        <tbody>
+            {% if servicos %}
+                {% for servico in servicos %}
+                <tr>
+                    <td>{{ servico.cliente.nome }}</td>
+                    <td>
+                        <span class="badge bg-primary">{{ servico.get_tipo_display }}</span>
+                    </td>
+                    <td>
+                        {% if servico.valor_orcamento %}
+                            R$ {{ servico.valor_orcamento|floatformat:2 }}
+                        {% else %}
+                            <span class="text-muted">Aguardando</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ servico.data_de_entrada|date:"d/m/Y" }}</td>
+                    <td>
+                        <span class="badge bg-{% if servico.status == 'PEN' %}warning{% elif servico.status == 'AND' %}info{% elif servico.status == 'CON' %}success{% else %}secondary{% endif %}">
+                            {{ servico.get_status_display }}
+                        </span>
+                    </td>
+                    <td>R$ {{ servico.valor_orcamento|default:"0.00"|floatformat:2 }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <a href="{% url 'gerenciar_pedido' servico.id %}" class="btn btn-sm btn-outline-info" title="Gerenciar">
+                            <i class="bi bi-gear"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" class="no-data">
+                        <i class="bi bi-controller"></i>
+                        <p>Nenhum serviço de console registrado ainda.</p>
+                    </td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 </div>
 
 <!-- Modal Novo Serviço -->
-{% include 'modals/novo_servico_modal.html' %}
-
+<div class="modal fade" id="novoServicoModal" tabindex="-1" aria-labelledby="novoServicoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="novoServicoModalLabel">Novo Serviço - Console</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formNovoServico" method="POST" action="{% url 'salvar_servico_console' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="cliente" class="form-label">Cliente *</label>
+                        <select class="form-control" id="cliente" name="cliente" required>
+                            <option value="">Selecione um cliente</option>
+                            {% for cliente in clientes %}
+                            <option value="{{ cliente.telefone }}">{{ cliente.nome }} - {{ cliente.telefone }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição do Serviço *</label>
+                        <!-- MUDAR name para "detalhes_orcamento" -->
+                        <textarea class="form-control" id="descricao" name="detalhes_orcamento" rows="4" required 
+                                placeholder="Descreva o problema ou serviço necessário..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="valor" class="form-label">Valor (R$) *</label>
+                        <!-- MUDAR name para "valor_orcamento" -->
+                        <input type="number" class="form-control" id="valor" name="valor_orcamento" 
+                            step="0.01" min="0" required placeholder="0.00">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Serviço</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}

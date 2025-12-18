@@ -234,46 +234,36 @@
             <tr>
                 <th>Nome</th>
                 <th>Telefone</th>
-                <th>Email</th>
                 <th>Cidade/Estado</th>
                 <th>Data Cadastro</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
+            {% for cliente in clientes %}
             <tr>
-                <td><strong>Ana Silva</strong></td>
+                <td><strong>{{ cliente.nome }}</strong></td>
                 <td>
-                    <a href="tel:11987654321" class="telefone-link">
-                        <i class="bi bi-telephone me-1"></i>(11) 98765-4321
+                    <a href="tel:{{ cliente.telefone }}" class="telefone-link">
+                        <i class="bi bi-telephone me-1"></i>{{ cliente.telefone }}
                     </a>
                 </td>
-                <td>ana.silva@email.com</td>
-                <td>São Paulo, SP</td>
-                <td>12/06/2022</td>
+                <td>{{ cliente.endereco|truncatechars:30 }}</td>
+                <td>{{ cliente.user.date_joined|date:"d/m/Y" }}</td>
                 <td>
-                    <button class="btn btn-detalhes">
+                    <a href="#" class="btn btn-detalhes">
                         <i class="bi bi-eye me-1"></i>Ver
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Pedro Santos</strong></td>
-                <td>
-                    <a href="tel:11912345678" class="telefone-link">
-                        <i class="bi bi-telephone me-1"></i>(11) 91234-5678
                     </a>
                 </td>
-                <td>pedro.santos@email.com</td>
-                <td>Rio de Janeiro, RJ</td>
-                <td>07/01/2022</td>
-                <td>
-                    <button class="btn btn-detalhes">
-                        <i class="bi bi-eye me-1"></i>Ver
-                    </button>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center py-4">
+                    <i class="bi bi-people display-4 text-muted d-block mb-2"></i>
+                    Nenhum cliente cadastrado ainda.
                 </td>
             </tr>
-            <!-- Adicione mais clientes conforme necessário -->
+            {% endfor %}
         </tbody>
     </table>
 </div>
@@ -285,73 +275,35 @@
 
 {% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Máscara para telefone
-        const telefoneInput = document.getElementById('telefone');
-        if (telefoneInput) {
-            telefoneInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 11) value = value.substring(0, 11);
-                
-                if (value.length > 10) {
-                    // Formato: (00) 00000-0000
-                    value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
-                } else if (value.length > 6) {
-                    // Formato: (00) 0000-0000
-                    value = value.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
-                } else if (value.length > 2) {
-                    value = value.replace(/^(\d{2})(\d{0,4})$/, '($1) $2');
-                } else if (value.length > 0) {
-                    value = value.replace(/^(\d*)$/, '($1');
-                }
-                
-                e.target.value = value;
-            });
-        }
-
-        // Validação do formulário de cliente
-        const formNovoCliente = document.getElementById('formNovoCliente');
-        if (formNovoCliente) {
-            formNovoCliente.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Validação básica
-                const nomeCompleto = document.getElementById('nomeCompleto');
-                const telefone = document.getElementById('telefone');
-                
-                if (!nomeCompleto.value.trim()) {
-                    alert('Por favor, informe o nome completo do cliente.');
-                    nomeCompleto.focus();
-                    return;
-                }
-                
-                const telefoneNumeros = telefone.value.replace(/\D/g, '');
-                if (!telefoneNumeros || telefoneNumeros.length < 10) {
-                    alert('Por favor, informe um telefone válido com DDD.');
-                    telefone.focus();
-                    return;
-                }
-                
-                // Aqui você pode enviar o formulário via AJAX
-                alert('Cliente salvo com sucesso!');
-                
-                // Fechar modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('novoClienteModal'));
-                modal.hide();
-                
-                // Resetar formulário
-                formNovoCliente.reset();
-                
-                // Em produção, aqui você faria uma requisição AJAX para salvar
-                // e depois atualizaria a lista de clientes
-            });
-        }
-
-        // Inicializar tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+    const formNovoCliente = document.getElementById('formNovoCliente');
+    if (formNovoCliente) {
+        formNovoCliente.addEventListener('submit', function(e) {
+            // Validação básica
+            const nomeCompleto = document.getElementById('nomeCompleto');
+            const telefone = document.getElementById('telefone');
+            
+            if (!nomeCompleto.value.trim()) {
+                alert('Por favor, informe o nome completo do cliente.');
+                nomeCompleto.focus();
+                e.preventDefault(); // Impede envio se inválido
+                return;
+            }
+            
+            const telefoneNumeros = telefone.value.replace(/\D/g, '');
+            if (!telefoneNumeros || telefoneNumeros.length < 10) {
+                alert('Por favor, informe um telefone válido com DDD.');
+                telefone.focus();
+                e.preventDefault(); // Impede envio se inválido
+                return;
+            }
+            
+            // Se chegou aqui, o formulário é válido
+            // Deixe o formulário ser enviado normalmente
+            // Não faça e.preventDefault() aqui!
+            
+            // Opcional: Mostrar mensagem de sucesso
+            console.log('Formulário válido, enviando...');
         });
-    });
+    }
 </script>
 {% endblock %}

@@ -2,10 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Cliente(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Usuário")
     nome = models.CharField(max_length=150, verbose_name="Nome Completo")
     telefone = models.CharField(max_length=15, verbose_name="Telefone", null=False, primary_key=True)
-    endereco = models.CharField(max_length=255, verbose_name="Endereço", null=False)
+    cidade = models.CharField(max_length=100, verbose_name="Cidade", null=True, blank=True)
+    estado = models.CharField(max_length=100, verbose_name="Estado", null=True, blank=True)
+    data_cadastro = models.DateField(auto_now_add=True, verbose_name="Data de Cadastro")
+    descricao = models.TextField(verbose_name="Descrição", null=True, blank=True)
 
     class Meta:
         app_label = 'usuarios'
@@ -29,7 +32,8 @@ class Pedidos(models.Model):
     # 1. Defina as opções como uma classe de tuplas
     class TiposPedidos(models.TextChoices):
         CONSOLE = 'CON', 'Console'
-        OUTROS = 'OUT', 'Acessórios/Outros'
+        CONTROLE = 'CTR', 'Controle'
+        OUTROS = 'OUT', 'Outros'
     
     class StatusPedido(models.TextChoices):
         PENDENTE = 'PEN', 'Pendente'
@@ -95,3 +99,7 @@ class Notificacao(models.Model):
     
     def __str__(self):
         return f"Notificação para {self.usuario.username}"
+    
+class Perfil(models.Model):
+    nome = models.CharField(max_length=150, verbose_name="Nome Completo")
+    email = models.EmailField(unique=True, verbose_name="Email")

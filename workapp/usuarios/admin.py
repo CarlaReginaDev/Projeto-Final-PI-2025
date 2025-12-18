@@ -38,7 +38,7 @@ class PedidosAdmin(admin.ModelAdmin):
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'telefone', 'endereco']
+    list_display = ['nome', 'telefone', 'cidade', 'estado']
     search_fields = ['nome', 'telefone']
 
 @admin.register(Login_Usuario)

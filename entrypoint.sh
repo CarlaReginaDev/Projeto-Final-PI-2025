@@ -16,6 +16,7 @@ export PYTHONPATH=$PYTHONPATH:/app
 
 # Execute as migrações do banco de dados
 echo "Executando migrações..."
+python workapp/manage.py makemigrations
 python workapp/manage.py migrate
 
 # Inicie o comando principal (o CMD do Dockerfile)
