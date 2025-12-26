@@ -25,9 +25,9 @@ load_dotenv()
 SECRET_KEY = 'django-insecure-vo5$f!s#i0tc$!&z#nep2q8$3pjyb79b+_@f)2r=$k2j96hyjt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web', 'registrodepedidos.nadic.com.br']
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080',
@@ -126,6 +126,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = 'static/'
 
 # Default primary key field type
