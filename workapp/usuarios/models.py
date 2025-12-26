@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Cliente(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Usuário")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Usuário", null=True, blank=True)
     nome = models.CharField(max_length=150, verbose_name="Nome Completo")
     telefone = models.CharField(max_length=15, verbose_name="Telefone", null=False, primary_key=True)
     cidade = models.CharField(max_length=100, verbose_name="Cidade", null=True, blank=True)

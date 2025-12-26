@@ -348,7 +348,7 @@ def salvar_cliente(request):
                 messages.error(request, 'Já existe um cliente com este telefone.')
                 return redirect('clientes')
             
-            # Processar data (se não vier, usar data atual)
+            # Processar data
             from datetime import datetime
             if data_cadastro:
                 try:
@@ -358,15 +358,20 @@ def salvar_cliente(request):
             else:
                 data_obj = datetime.now().date()
             
-            # Criar cliente SEM user primeiro (para testes)
+            # Criar endereço
+            endereco = ""
+            if cidade or estado:
+                endereco = f"{cidade}{'/' if cidade and estado else ''}{estado}"
+            
+            # CRIAR CLIENTE VINCULADO AO USUÁRIO LOGADO
             cliente = Cliente.objects.create(
+                user=request.user,  # VINCULE AO USUÁRIO LOGADO
                 nome=nome,
                 telefone=telefone,
                 cidade=cidade,
                 estado=estado,
                 descricao=descricao,
                 data_cadastro=data_obj
-                # Não definimos user por enquanto
             )
             
             messages.success(request, f'Cliente "{nome}" salvo com sucesso!')
